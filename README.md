@@ -26,8 +26,7 @@ image-layout.md and manifest.md).
 - A `repo` name like example.com/org/app where a number of tagged packages live. A repo name is in the DNS federated namespace e.g. example.com/org/app
 - A `repo tag` represnts a package release that resolves to a package `manifest` or `manifest list` by digest.
   - A `manifest` pointing to the package blob by digest. This is built and the digest is optionally signed by the developer.
-  - A `manifest list` pointing to one or more manifests. This is generated and the digest is optionally signed by the developer. This indirection will allow for new versions of the package format or handling different formats like DAB.## gRPC + REST Gateway Play
-
+  - A `manifest list` pointing to one or more manifests. This is generated and the digest is optionally signed by the developer. This indirection will allow for new versions of the package format or handling different formats like DAB.
 
 ## Trying it out
 
@@ -36,4 +35,5 @@ To try it all out do this:
 ```
 $ go get -u github.com/philips/kpr-server
 $ kpr-server serve
+$ $GOPATH/src/github.com/philips/kpr-server/test
 ```
