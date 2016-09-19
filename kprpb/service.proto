@@ -13,6 +13,19 @@ message ListResponse {
   repeated Repos repos = 1;
 }
 
+message ListTagsRequest {
+  string name = 1;
+}
+
+message ListTagsResponse {
+  string name = 1;
+
+  message Tags {
+    string name = 1;
+  };
+  repeated Tags tags = 2;
+}
+
 service Repo {
   rpc List(ListRequest) returns (ListResponse) {
       option (google.api.http) = {
@@ -20,10 +33,9 @@ service Repo {
     };
   }
 
-//  rpc Tags(TagRequest) returns (TagReponse) {
-//      option (google.api.http) = {
-//        get: "/repos/{repo}/tag"
-//        body: "*"
-//    };
-//  }
+  rpc ListTags(ListTagsRequest) returns (ListTagsResponse) {
+      option (google.api.http) = {
+        get: "/{name=repos/**}/tags"
+    };
+  }
 }

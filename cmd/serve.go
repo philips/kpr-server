@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/philips/kpr-server/pkg/ui/data/swagger"
+	"github.com/philips/kpr-server/repo"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/philips/go-bindata-assetfs"
@@ -33,20 +34,6 @@ var serveCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(serveCmd)
-}
-
-type myService struct{}
-
-func (m *myService) List(c context.Context, s *pb.ListRequest) (*pb.ListResponse, error) {
-	println("hello")
-	repos := []ListResponse_Repos{
-		{Name: "quay.io/foo"},
-	}
-	return &pb.ListResponse{}, nil
-}
-
-func newServer() *myService {
-	return new(myService)
 }
 
 // grpcHandlerFunc returns an http.Handler that delegates to grpcServer on incoming gRPC
@@ -81,7 +68,7 @@ func serve() {
 		grpc.Creds(credentials.NewClientTLSFromCert(demoCertPool, "localhost:10000"))}
 
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterRepoServiceServer(grpcServer, newServer())
+	pb.RegisterRepoServer(grpcServer, repo.NewServer())
 	ctx := context.Background()
 
 	dcreds := credentials.NewTLS(&tls.Config{
@@ -96,7 +83,7 @@ func serve() {
 	})
 
 	gwmux := runtime.NewServeMux()
-	err := pb.RegisterRepoServiceHandlerFromEndpoint(ctx, gwmux, demoAddr, dopts)
+	err := pb.RegisterRepoHandlerFromEndpoint(ctx, gwmux, demoAddr, dopts)
 	if err != nil {
 		fmt.Printf("serve: %v\n", err)
 		return
