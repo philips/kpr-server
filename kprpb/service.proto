@@ -1,0 +1,29 @@
+syntax = "proto3";
+package kprpb;
+
+import "google/api/annotations.proto";
+
+message ListRequest {
+}
+
+message ListResponse {
+  message Repos {
+    string name = 1;
+  };
+  repeated Repos repos = 1;
+}
+
+service Repo {
+  rpc List(ListRequest) returns (ListResponse) {
+      option (google.api.http) = {
+        get: "/repos"
+    };
+  }
+
+//  rpc Tags(TagRequest) returns (TagReponse) {
+//      option (google.api.http) = {
+//        get: "/repos/{repo}/tag"
+//        body: "*"
+//    };
+//  }
+}

@@ -1,4 +1,4 @@
-package echopb
+package kprpb
 
 const (
 	Swagger = swagger

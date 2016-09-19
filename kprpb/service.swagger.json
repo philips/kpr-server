@@ -15,40 +15,44 @@
     "application/json"
   ],
   "paths": {
-    "/v1/echo": {
-      "post": {
-        "operationId": "Echo",
+    "/repos": {
+      "get": {
+        "operationId": "List",
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/echopbEchoMessage"
+              "$ref": "#/definitions/kprpbListResponse"
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/echopbEchoMessage"
-            }
-          }
-        ],
         "tags": [
-          "EchoService"
+          "Repo"
         ]
       }
     }
   },
   "definitions": {
-    "echopbEchoMessage": {
+    "ListResponseRepos": {
       "type": "object",
       "properties": {
-        "value": {
+        "name": {
           "type": "string",
           "format": "string"
+        }
+      }
+    },
+    "kprpbListRequest": {
+      "type": "object"
+    },
+    "kprpbListResponse": {
+      "type": "object",
+      "properties": {
+        "repos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ListResponseRepos"
+          }
         }
       }
     }
