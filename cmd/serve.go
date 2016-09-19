@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/philips/grpc-gateway-example/pkg/ui/data/swagger"
+	"github.com/philips/kpr-server/pkg/ui/data/swagger"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/philips/go-bindata-assetfs"
@@ -19,7 +19,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	pb "github.com/philips/grpc-gateway-example/kprpb"
+	pb "github.com/philips/kpr-server/kprpb"
 )
 
 // serveCmd represents the serve command
@@ -37,9 +37,12 @@ func init() {
 
 type myService struct{}
 
-func (m *myService) Echo(c context.Context, s *pb.EchoMessage) (*pb.EchoMessage, error) {
-	fmt.Printf("rpc request Echo(%q)\n", s.Value)
-	return s, nil
+func (m *myService) List(c context.Context, s *pb.ListRequest) (*pb.ListResponse, error) {
+	println("hello")
+	repos := []ListResponse_Repos{
+		{Name: "quay.io/foo"},
+	}
+	return &pb.ListResponse{}, nil
 }
 
 func newServer() *myService {
@@ -78,7 +81,7 @@ func serve() {
 		grpc.Creds(credentials.NewClientTLSFromCert(demoCertPool, "localhost:10000"))}
 
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterEchoServiceServer(grpcServer, newServer())
+	pb.RegisterRepoServiceServer(grpcServer, newServer())
 	ctx := context.Background()
 
 	dcreds := credentials.NewTLS(&tls.Config{
@@ -93,7 +96,7 @@ func serve() {
 	})
 
 	gwmux := runtime.NewServeMux()
-	err := pb.RegisterEchoServiceHandlerFromEndpoint(ctx, gwmux, demoAddr, dopts)
+	err := pb.RegisterRepoServiceHandlerFromEndpoint(ctx, gwmux, demoAddr, dopts)
 	if err != nil {
 		fmt.Printf("serve: %v\n", err)
 		return

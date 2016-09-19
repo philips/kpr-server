@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/philips/grpc-gateway-example/cmd"
+import "github.com/philips/kpr-server/cmd"
 
 func main() {
 	cmd.Execute()

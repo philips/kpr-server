@@ -5,7 +5,7 @@ import (
 	"crypto/x509"
 	"fmt"
 
-	"github.com/philips/grpc-gateway-example/insecure"
+	"github.com/philips/kpr-server/insecure"
 )
 
 const (
