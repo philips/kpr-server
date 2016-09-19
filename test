@@ -1,0 +1,2 @@
+curl -k  https://localhost:10000/repos ; echo
+curl -k https://localhost:10000/repos/quay.io/foo/bar/tags; echo
