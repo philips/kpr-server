@@ -10,9 +10,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/philips/kpr-server/pkg/ui/data/swagger"
-	"github.com/philips/kpr-server/repo"
-
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/philips/go-bindata-assetfs"
 	"github.com/spf13/cobra"
@@ -20,7 +17,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
+	"github.com/philips/kpr-server/blob"
 	pb "github.com/philips/kpr-server/kprpb"
+	"github.com/philips/kpr-server/pkg/ui/data/swagger"
+	"github.com/philips/kpr-server/repo"
 )
 
 // serveCmd represents the serve command
@@ -69,6 +69,7 @@ func serve() {
 
 	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterRepoServer(grpcServer, repo.NewServer())
+	pb.RegisterBlobServer(grpcServer, blob.NewServer())
 	ctx := context.Background()
 
 	dcreds := credentials.NewTLS(&tls.Config{
@@ -88,7 +89,11 @@ func serve() {
 		fmt.Printf("serve: %v\n", err)
 		return
 	}
-
+	err = pb.RegisterBlobHandlerFromEndpoint(ctx, gwmux, demoAddr, dopts)
+	if err != nil {
+		fmt.Printf("serve: %v\n", err)
+		return
+	}
 	mux.Handle("/", gwmux)
 	serveSwagger(mux)
 

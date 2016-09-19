@@ -1,0 +1,23 @@
+package blob
+
+import (
+	"golang.org/x/net/context"
+
+	pb "github.com/philips/kpr-server/kprpb"
+)
+
+type BlobService struct{}
+
+func (m *BlobService) PutBlob(c context.Context, s *pb.BlobRequest) (*pb.Descriptor, error) {
+	println("putBlob")
+	return &pb.Descriptor{}, nil
+}
+
+func (m *BlobService) GetBlob(c context.Context, s *pb.BlobRequest) (*pb.BlobResponse, error) {
+	println("getBlob")
+	return &pb.BlobResponse{[]byte("hello")}, nil
+}
+
+func NewServer() *BlobService {
+	return new(BlobService)
+}

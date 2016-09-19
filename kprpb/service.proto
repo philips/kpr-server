@@ -3,6 +3,20 @@ package kprpb;
 
 import "google/api/annotations.proto";
 
+message Descriptor {
+  string mediaType = 1;
+  int64 size = 2;
+  string digest = 3;
+}
+
+message PackageManifest {
+  int64 schemaVersion = 1;
+  string mediaType = 2;
+  Descriptor package = 3;
+  repeated Descriptor dependencies = 4;
+  repeated Descriptor packages = 5;
+}
+
 message ListRequest {
 }
 
@@ -26,6 +40,12 @@ message ListTagsResponse {
   repeated Tags tags = 2;
 }
 
+message TagRequest {
+  string name = 1;
+  string tag = 2;
+  Descriptor desc = 3;
+}
+
 service Repo {
   rpc List(ListRequest) returns (ListResponse) {
       option (google.api.http) = {
@@ -36,6 +56,50 @@ service Repo {
   rpc ListTags(ListTagsRequest) returns (ListTagsResponse) {
       option (google.api.http) = {
         get: "/{name=repos/**}/tags"
+    };
+  }
+
+  rpc GetTag(TagRequest) returns (PackageManifest) {
+      option (google.api.http) = {
+        get: "/{name=repos/**}/tags/{tag}"
+    };
+  }
+
+  rpc PutTag(TagRequest) returns (Descriptor) {
+      option (google.api.http) = {
+        put: "/{name=repos/**}/tags/{tag}"
+        body: 'desc'
+    };
+  }
+
+  rpc DeleteTag(TagRequest) returns (Descriptor) {
+      option (google.api.http) = {
+        put: "/{name=repos/**}/tags/{tag}"
+    };
+  }
+}
+
+message BlobRequest {
+  string name = 1;
+  string digest = 2;
+  bytes blob = 3;
+}
+
+message BlobResponse {
+  bytes blob = 1;
+}
+
+service Blob {
+  rpc PutBlob(BlobRequest) returns (Descriptor) {
+      option (google.api.http) = {
+        put: "/{name=repos/**}/blobs/{digest}"
+        body: 'blob'
+    };
+  }
+  // TODO: custom marshaller
+  rpc GetBlob(BlobRequest) returns (BlobResponse) {
+      option (google.api.http) = {
+        get: "/{name=repos/**}/blobs/{digest}"
     };
   }
 }

@@ -1,2 +1,8 @@
-curl -k  https://localhost:10000/repos ; echo
-curl -k https://localhost:10000/repos/quay.io/foo/bar/tags; echo
+curl -s -k  https://localhost:10000/repos | jq
+curl -s -k https://localhost:10000/repos/quay.io/foo/bar/tags | jq
+curl -s -k https://localhost:10000/repos/quay.io/foo/bar/tags/v1.0.0 | jq
+curl -s -k https://localhost:10000/repos/quay.io/foo/bar/tags/v1.0.1 | jq
+curl -s -k https://localhost:10000/repos/quay.io/foo/bar/tags/v1.0.2 | jq
+curl -s -k -X PUT https://localhost:10000/repos/quay.io/foo/bar/tags/v1.0.0 -d '{"mediaType": "application/vnd.helm.package.tar+gzip", "size": "12", "digest": "sha256:cafecafecafe"}' | jq
+curl -s -k https://localhost:10000/repos/quay.io/foo/bar/blobs/cafecafecafe | jq
+curl -s -k -X PUT https://localhost:10000/repos/quay.io/foo/bar/blobs/cafecafecafe -d '"aGVsbG8="'  | jq
