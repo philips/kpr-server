@@ -19,7 +19,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	pb "github.com/philips/grpc-gateway-example/echopb"
+	pb "github.com/philips/grpc-gateway-example/kprpb"
 )
 
 // serveCmd represents the serve command
