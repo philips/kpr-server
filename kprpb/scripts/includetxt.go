@@ -12,7 +12,7 @@ import (
 func main() {
 	fs, _ := ioutil.ReadDir(".")
 	out, _ := os.Create("swagger.pb.go")
-	out.Write([]byte("package echopb \n\nconst (\n"))
+	out.Write([]byte("package kprpb \n\nconst (\n"))
 	for _, f := range fs {
 		if strings.HasSuffix(f.Name(), ".json") {
 			name := strings.TrimPrefix(f.Name(), "service.")

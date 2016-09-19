@@ -1,7 +1,7 @@
-package kprpb
+package kprpb 
 
 const (
-	swagger = `{
+swagger = `{
   "swagger": "2.0",
   "info": {
     "title": "service.proto",
