@@ -2,7 +2,6 @@ package repo
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -71,8 +70,6 @@ func (m *RepoService) GetTag(c context.Context, s *pb.TagRequest) (*pb.PackageMa
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("%v\n", string(b))
 
 	d := pb.Descriptor{}
 	err = json.Unmarshal(b, &d)

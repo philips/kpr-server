@@ -92,14 +92,14 @@ message BlobResponse {
 service Blob {
   rpc PutBlob(BlobRequest) returns (Descriptor) {
       option (google.api.http) = {
-        put: "/repos/{name=**}/blobs/{digest}"
+        put: "/repos/{name=**}/blobs/sha256/{digest}"
         body: 'blob'
     };
   }
   // TODO: custom marshaller
   rpc GetBlob(BlobRequest) returns (BlobResponse) {
       option (google.api.http) = {
-        get: "/repos/{name=**}/blobs/{digest}"
+        get: "/repos/{name=**}/blobs/sha256/{digest}"
     };
   }
 }

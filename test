@@ -1,7 +1,7 @@
-curl -s -k -X PUT https://localhost:10000/repos/foo/bar/blobs/cafecafecafe -d '"aGVsbG8="'  | jq
-curl -s -k -X PUT https://localhost:10000/repos/foo/bar/tags/v1.0.0 -d '{"mediaType": "application/vnd.helm.package.tar+gzip", "size": "12", "digest": "sha256:cafecafecafe"}' | jq
+curl -s -k -X PUT https://localhost:10000/repos/foo/bar/blobs/sha256/2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 -d '"aGVsbG8="' |jq
+curl -s -k https://localhost:10000/repos/foo/bar/blobs/sha256/2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824 | jq
+curl -s -k -X PUT https://localhost:10000/repos/foo/bar/tags/v1.0.0 -d '{"mediaType": "application/vnd.helm.package.tar+gzip", "size": "12", "digest": "sha256:2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"}' | jq
 curl -s -k  https://localhost:10000/repos/index | jq
 curl -s -k https://localhost:10000/repos/foo/bar/tags | jq
 curl -s -k https://localhost:10000/repos/foo/bar/tags/v1.0.0 | jq
-curl -s -k https://localhost:10000/repos/foo/bar/blobs/cafecafecafe | jq
 curl -s -k X DELETE https://localhost:10000/repos/foo/bar/tags/v1.0.0 | jq

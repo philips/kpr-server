@@ -34,7 +34,7 @@ swagger = `{
         ]
       }
     },
-    "/repos/{name}/blobs/{digest}": {
+    "/repos/{name}/blobs/sha256/{digest}": {
       "get": {
         "summary": "TODO: custom marshaller",
         "operationId": "GetBlob",

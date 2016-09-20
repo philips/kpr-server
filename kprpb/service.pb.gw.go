@@ -572,9 +572,9 @@ func RegisterBlobHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.
 }
 
 var (
-	pattern_Blob_PutBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "blobs", "digest"}, ""))
+	pattern_Blob_PutBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"repos", "name", "blobs", "sha256", "digest"}, ""))
 
-	pattern_Blob_GetBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "blobs", "digest"}, ""))
+	pattern_Blob_GetBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"repos", "name", "blobs", "sha256", "digest"}, ""))
 )
 
 var (
