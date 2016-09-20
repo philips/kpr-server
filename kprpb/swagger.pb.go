@@ -18,7 +18,7 @@ swagger = `{
     "application/json"
   ],
   "paths": {
-    "/repos": {
+    "/repos/index": {
       "get": {
         "operationId": "List",
         "responses": {
@@ -34,7 +34,7 @@ swagger = `{
         ]
       }
     },
-    "/{name}/blobs/{digest}": {
+    "/repos/{name}/blobs/{digest}": {
       "get": {
         "summary": "TODO: custom marshaller",
         "operationId": "GetBlob",
@@ -105,7 +105,7 @@ swagger = `{
         ]
       }
     },
-    "/{name}/tags": {
+    "/repos/{name}/tags": {
       "get": {
         "operationId": "ListTags",
         "responses": {
@@ -130,7 +130,7 @@ swagger = `{
         ]
       }
     },
-    "/{name}/tags/{tag}": {
+    "/repos/{name}/tags/{tag}": {
       "get": {
         "operationId": "GetTag",
         "responses": {

@@ -6,7 +6,9 @@ import (
 	pb "github.com/philips/kpr-server/kprpb"
 )
 
-type BlobService struct{}
+type BlobService struct {
+	BaseDir string
+}
 
 func (m *BlobService) PutBlob(c context.Context, s *pb.BlobRequest) (*pb.Descriptor, error) {
 	println("putBlob")
@@ -18,6 +20,6 @@ func (m *BlobService) GetBlob(c context.Context, s *pb.BlobRequest) (*pb.BlobRes
 	return &pb.BlobResponse{[]byte("hello")}, nil
 }
 
-func NewServer() *BlobService {
-	return new(BlobService)
+func NewServer(baseDir string) *BlobService {
+	return &BlobService{baseDir}
 }

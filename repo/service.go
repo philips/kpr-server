@@ -1,74 +1,106 @@
 package repo
 
 import (
-	"errors"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
 
 	"golang.org/x/net/context"
 
 	pb "github.com/philips/kpr-server/kprpb"
 )
 
-type RepoService struct{}
+type RepoService struct {
+	BaseDir string
+}
 
 func (m *RepoService) List(c context.Context, s *pb.ListRequest) (*pb.ListResponse, error) {
-	println("list")
-	repos := []*pb.ListResponse_Repos{
-		{Name: "quay.io/foo/bar"},
+	orgs, err := ioutil.ReadDir(m.BaseDir)
+	if err != nil {
+		return nil, err
 	}
-	return &pb.ListResponse{repos}, nil
+	repoList := []*pb.ListResponse_Repos{}
+	for _, org := range orgs {
+		repos, err := ioutil.ReadDir(filepath.Join(m.BaseDir, org.Name()))
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, repo := range repos {
+			repoList = append(repoList, &pb.ListResponse_Repos{Name: filepath.Join(org.Name(), repo.Name())})
+		}
+	}
+
+	return &pb.ListResponse{repoList}, nil
 }
 
 func (m *RepoService) ListTags(c context.Context, s *pb.ListTagsRequest) (*pb.ListTagsResponse, error) {
-	println("listTags")
-	tags := []*pb.ListTagsResponse_Tags{
-		{Name: "v1.0.0"},
-		{Name: "v1.0.1"},
+	tags, err := ioutil.ReadDir(filepath.Join(m.BaseDir, s.Name, "tags"))
+	if err != nil {
+		return nil, err
 	}
-	return &pb.ListTagsResponse{Name: "quay.io/foo/bar", Tags: tags}, nil
+	tagsList := []*pb.ListTagsResponse_Tags{}
+	for _, tag := range tags {
+		tagsList = append(tagsList, &pb.ListTagsResponse_Tags{Name: filepath.Join(tag.Name())})
+	}
+
+	return &pb.ListTagsResponse{Name: s.Name, Tags: tagsList}, nil
 }
 
 func (m *RepoService) PutTag(c context.Context, s *pb.TagRequest) (*pb.Descriptor, error) {
-	println("putTag")
+	tagDir := filepath.Join(m.BaseDir, s.Name, "tags")
+	err := os.MkdirAll(tagDir, 0755)
+	if err != nil && !os.IsExist(err) {
+		return nil, err
+	}
+
 	d := s.GetDesc()
-	println(d.MediaType)
+	b, err := json.Marshal(d)
+	if err != nil {
+		return nil, err
+	}
+	ioutil.WriteFile(filepath.Join(tagDir, s.Tag), b, 0644)
 	return d, nil
 }
 
 func (m *RepoService) GetTag(c context.Context, s *pb.TagRequest) (*pb.PackageManifest, error) {
-	println("getTag")
-	switch s.Tag {
-	case "v1.0.0":
-		return &pb.PackageManifest{
-			SchemaVersion: 1,
-			MediaType:     "application/vnd.kpr.image.manifest.v1+json",
-			Package: &pb.Descriptor{
-				MediaType: "application/vnd.helm.package.tar+gzip",
-				Size:      12,
-				Digest:    "sha256:cafecafecafe",
-			},
-		}, nil
-	case "v1.0.1":
-		return &pb.PackageManifest{
-			SchemaVersion: 1,
-			MediaType:     "application/vnd.kpr.image.manifest.list.v1+json",
-			Packages: []*pb.Descriptor{
-				{
-					MediaType: "application/vnd.helm.package.tar+gzip",
-					Size:      12,
-					Digest:    "sha256:cafecafecafe",
-				},
-			},
-		}, nil
+	tagFile := filepath.Join(m.BaseDir, s.Name, "tags", s.Tag)
+	b, err := ioutil.ReadFile(tagFile)
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("no version")
+
+	fmt.Printf("%v\n", string(b))
+
+	d := pb.Descriptor{}
+	err = json.Unmarshal(b, &d)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO get the blob
+	return &pb.PackageManifest{}, nil
 }
 
 func (m *RepoService) DeleteTag(c context.Context, s *pb.TagRequest) (*pb.Descriptor, error) {
-	println("deleteTag")
-	d := s.GetDesc()
-	return d, nil
+	tagFile := filepath.Join(m.BaseDir, s.Name, "tags", s.Tag)
+	b, err := ioutil.ReadFile(tagFile)
+	if err != nil {
+		return nil, err
+	}
+
+	d := pb.Descriptor{}
+	err = json.Unmarshal(b, &d)
+	if err != nil {
+		return nil, err
+	}
+
+	os.Remove(tagFile)
+	return &d, nil
 }
 
-func NewServer() *RepoService {
-	return new(RepoService)
+func NewServer(baseDir string) *RepoService {
+	return &RepoService{filepath.Join(baseDir, "repos")}
 }

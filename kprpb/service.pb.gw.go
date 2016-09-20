@@ -459,15 +459,15 @@ func RegisterRepoHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.
 }
 
 var (
-	pattern_Repo_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"repos"}, ""))
+	pattern_Repo_List_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"repos", "index"}, ""))
 
-	pattern_Repo_ListTags_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 2, 5, 1, 2, 2}, []string{"repos", "name", "tags"}, ""))
+	pattern_Repo_ListTags_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2}, []string{"repos", "name", "tags"}, ""))
 
-	pattern_Repo_GetTag_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 2, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "tags", "tag"}, ""))
+	pattern_Repo_GetTag_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "tags", "tag"}, ""))
 
-	pattern_Repo_PutTag_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 2, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "tags", "tag"}, ""))
+	pattern_Repo_PutTag_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "tags", "tag"}, ""))
 
-	pattern_Repo_DeleteTag_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 2, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "tags", "tag"}, ""))
+	pattern_Repo_DeleteTag_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "tags", "tag"}, ""))
 )
 
 var (
@@ -572,9 +572,9 @@ func RegisterBlobHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.
 }
 
 var (
-	pattern_Blob_PutBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 2, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "blobs", "digest"}, ""))
+	pattern_Blob_PutBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "blobs", "digest"}, ""))
 
-	pattern_Blob_GetBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 2, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "blobs", "digest"}, ""))
+	pattern_Blob_GetBlob_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 3, 0, 4, 1, 5, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"repos", "name", "blobs", "digest"}, ""))
 )
 
 var (

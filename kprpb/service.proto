@@ -49,32 +49,32 @@ message TagRequest {
 service Repo {
   rpc List(ListRequest) returns (ListResponse) {
       option (google.api.http) = {
-        get: "/repos"
+        get: "/repos/index"
     };
   }
 
   rpc ListTags(ListTagsRequest) returns (ListTagsResponse) {
       option (google.api.http) = {
-        get: "/{name=repos/**}/tags"
+        get: "/repos/{name=**}/tags"
     };
   }
 
   rpc GetTag(TagRequest) returns (PackageManifest) {
       option (google.api.http) = {
-        get: "/{name=repos/**}/tags/{tag}"
+        get: "/repos/{name=**}/tags/{tag}"
     };
   }
 
   rpc PutTag(TagRequest) returns (Descriptor) {
       option (google.api.http) = {
-        put: "/{name=repos/**}/tags/{tag}"
+        put: "/repos/{name=**}/tags/{tag}"
         body: 'desc'
     };
   }
 
   rpc DeleteTag(TagRequest) returns (Descriptor) {
       option (google.api.http) = {
-        put: "/{name=repos/**}/tags/{tag}"
+        put: "/repos/{name=**}/tags/{tag}"
     };
   }
 }
@@ -92,14 +92,14 @@ message BlobResponse {
 service Blob {
   rpc PutBlob(BlobRequest) returns (Descriptor) {
       option (google.api.http) = {
-        put: "/{name=repos/**}/blobs/{digest}"
+        put: "/repos/{name=**}/blobs/{digest}"
         body: 'blob'
     };
   }
   // TODO: custom marshaller
   rpc GetBlob(BlobRequest) returns (BlobResponse) {
       option (google.api.http) = {
-        get: "/{name=repos/**}/blobs/{digest}"
+        get: "/repos/{name=**}/blobs/{digest}"
     };
   }
 }

@@ -8,6 +8,7 @@ import (
 	"mime"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -28,7 +29,7 @@ var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Launches the example webserver on https://localhost:10000",
 	Run: func(cmd *cobra.Command, args []string) {
-		serve()
+		serve(args)
 	},
 }
 
@@ -63,13 +64,25 @@ func serveSwagger(mux *http.ServeMux) {
 	mux.Handle(prefix, http.StripPrefix(prefix, fileServer))
 }
 
-func serve() {
+func serve(args []string) {
 	opts := []grpc.ServerOption{
 		grpc.Creds(credentials.NewClientTLSFromCert(demoCertPool, "localhost:10000"))}
 
+	if len(args) != 1 {
+		println("repo directory required")
+		os.Exit(1)
+	}
+	baseDir := args[0]
+
+	err := os.Mkdir(baseDir, 0750)
+	if err != nil && !os.IsExist(err) {
+		fmt.Printf("repo directory creation failed: %v", err)
+		os.Exit(1)
+	}
+
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterRepoServer(grpcServer, repo.NewServer())
-	pb.RegisterBlobServer(grpcServer, blob.NewServer())
+	pb.RegisterRepoServer(grpcServer, repo.NewServer(baseDir))
+	pb.RegisterBlobServer(grpcServer, blob.NewServer(baseDir))
 	ctx := context.Background()
 
 	dcreds := credentials.NewTLS(&tls.Config{
@@ -84,7 +97,7 @@ func serve() {
 	})
 
 	gwmux := runtime.NewServeMux()
-	err := pb.RegisterRepoHandlerFromEndpoint(ctx, gwmux, demoAddr, dopts)
+	err = pb.RegisterRepoHandlerFromEndpoint(ctx, gwmux, demoAddr, dopts)
 	if err != nil {
 		fmt.Printf("serve: %v\n", err)
 		return
